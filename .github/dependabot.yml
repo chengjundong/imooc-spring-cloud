@@ -1,0 +1,15 @@
+# enable dependabot to automatically update dependency lib
+
+version: 2
+updates:
+  - package-ecosystem: maven
+    directory: /
+    schedule:
+      interval: weekly
+    allow:
+      - dependency-type: production
+    ignore:
+      - dependency-name: "*spring*"
+    assignees:
+      - chengjundong
+    target-branch: main
