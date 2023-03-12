@@ -28,8 +28,10 @@
 
     <!-- sub modules -->
     <modules>
-        <module>app-server</module>
+        <module>user-server</module>
         <module>eureka-server</module>
+        <module>user-read-server</module>
+        <module>user-score-app</module>
     </modules>
 
     <properties>

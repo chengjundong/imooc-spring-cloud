@@ -26,8 +26,17 @@ TBA
 Since we might need start several micro-service components including Eureka-Server, Zuul API gateway, Application Server, etc.  
 We need let me listen to different server port.  
 
-| Sever               | Port  |
-|---------------------|-------|
-| Eureka-Server       | 8761  |
-| Zuul                | 10030 |
-| ApplicationServer#1 | 8080  |
+| Sever                | Port  |
+|----------------------|-------|
+| Eureka-Server        | 8761  |
+| Zuul                 | 10030 |
+| User Write Service#1 | 8080  |
+| User Read Service#1  | 9030  |
+
+## Open H2 data base console
+We have enabled H2 console for in-mem H2 database for debug.
+
+1. launch user-server
+2. use [http://localhost:8080/h2-console/](http://localhost:8080/h2-console/) to open H2 console
+3. find username & password in `/user-server/src/main/resource/application.properties`, then login
+4. query data
