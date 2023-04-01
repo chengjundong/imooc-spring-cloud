@@ -55,3 +55,8 @@ Eureka client should register him self to all Eureka servers.
 |-----------------------|----------------|
 | Client side discovery | Eureka         |
 | Server side discovery | Nginx, ZK, K8S |
+
+# About service URL choosing, how is @LoadBalanced working?
+Annotation `@LoadBalanced` is used to indicate an instance of `RestTemplate` should use Spring Load Balance Client.  
+During spring context initialization, framework will add an interceptor into it, `org.springframework.cloud.client.loadbalancer.LoadBalancerInterceptor`.  
+That interceptor is using `org.springframework.cloud.client.loadbalancer.LoadBalancerClient` to communicate with Eureka Server and choose service host by given service ID.

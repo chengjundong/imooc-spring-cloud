@@ -32,6 +32,8 @@ We need let me listen to different server port.
 | Zuul                 | 10030 |
 | User Write Service#1 | 8080  |
 | User Read Service#1  | 9030  |
+| User Score Service#1 | 9040  |
+| Config Server        | 8100  |
 
 ## Open H2 data base console
 We have enabled H2 console for in-mem H2 database for debug.
