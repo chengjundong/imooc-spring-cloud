@@ -2,12 +2,11 @@ package jared.cheng.resource;
 
 import jared.cheng.service.UserScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author jared
@@ -15,10 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/user-score")
+@RefreshScope
 public class UserScoreResource {
 
     @Autowired
     private UserScoreService svc;
+
+    @Value("${app.owner.name}")
+    private String owner;
 
     @PostMapping(path = "/add")
     public ResponseEntity<UserResponse> addScore(@RequestBody UserRequest request) {
@@ -38,5 +41,10 @@ public class UserScoreResource {
                 }
             }, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/owner")
+    public String getOwner() {
+        return this.owner;
     }
 }
