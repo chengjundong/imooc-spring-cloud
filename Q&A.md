@@ -106,3 +106,18 @@ To add annotation `@RefreshScope` upon it
 4. if it is `refresh all`, it will destroy all beans annotated with `@RefreshScope` and register a new one with same bean name in context
 5. if it is `refresh(name)`, it just destroy that bean
 6. afterward, any component which use the bean will get a new instance from context with the latest properties
+
+# How to use Spring Cloud Stream with RabbitMQ?
+Spring Cloud Stream can bind two kinds of message middleware:
+1. RabbitMQ
+2. Kafka
+
+It provides an abstract layer upon message middleware and make message produce/consume/error handling more configurable. We can focus on business logic.  
+Since SpringCloud 3.1.X, it supports functional programming.
+
+__Reference__  
+- [Spring Cloud Stream](https://docs.spring.io/spring-cloud-stream/docs/3.2.7/reference/html/spring-cloud-stream.html#spring-cloud-stream-reference)
+- [Bind](https://docs.spring.io/spring-cloud-stream/docs/3.2.7/reference/html/spring-cloud-stream.html#_bindings)
+- [Test](https://docs.spring.io/spring-cloud-stream/docs/3.2.7/reference/html/spring-cloud-stream.html#_testing)
+- [Send message based on external data](https://docs.spring.io/spring-cloud-stream/docs/3.2.7/reference/html/spring-cloud-stream.html#_fat_jar)
+- [About non-functional programming](https://www.baeldung.com/spring-cloud-stream)

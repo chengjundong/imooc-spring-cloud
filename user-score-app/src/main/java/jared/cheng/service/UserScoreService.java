@@ -2,13 +2,14 @@ package jared.cheng.service;
 
 import jared.cheng.client.UserReadClient;
 import jared.cheng.client.UserWriteClient;
-import jared.cheng.resource.ErrorResponse;
-import jared.cheng.resource.UserRequest;
-import jared.cheng.resource.UserResponse;
+import jared.cheng.resource.*;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * @author jared
@@ -24,11 +25,13 @@ public class UserScoreService {
     private final RestTemplate restTemplate;
     private final UserReadClient userReadClient;
     private final UserWriteClient userWriteClient;
+    private final StreamBridge bridge;
 
-    public UserScoreService(RestTemplate restTemplate, UserReadClient userReadClient, UserWriteClient userWriteClient) {
+    public UserScoreService(RestTemplate restTemplate, UserReadClient userReadClient, UserWriteClient userWriteClient, StreamBridge bridge) {
         this.restTemplate = restTemplate;
         this.userReadClient = userReadClient;
         this.userWriteClient = userWriteClient;
+        this.bridge = bridge;
     }
 
     public UserResponse addScore(UserRequest request) {
@@ -41,7 +44,6 @@ public class UserScoreService {
             } else {
                 user.setScore(request.getScore() + user.getScore());
             }
-//            restTemplate.put(UPDATE_SCORE_URL, toWriteRequest(user));
             this.userWriteClient.updateScore(toWriteRequest(user));
             return user;
         } else {
@@ -50,6 +52,43 @@ public class UserScoreService {
                     this.setError(new ErrorResponse());
                     this.getError().setErrorId(504);
                     this.getError().setErrorMessage("failed to add score");
+                }
+            };
+        }
+    }
+
+    public AsyncUserResponse addScore(AsyncUserRequest request) {
+
+        try {
+            final List<UserRequest> input = request.getUsers();
+
+            // add scores for all input users
+            input.stream().forEach(u -> {
+                final ResponseEntity<UserResponse> resp = userReadClient.getUser(u.getUserName());
+                if (HttpStatus.OK == resp.getStatusCode()) {
+                    final UserResponse user = resp.getBody();
+                    if (null == user.getScore()) {
+                        u.setScore(u.getScore());
+                    } else {
+                        u.setScore(u.getScore() + user.getScore());
+                    }
+                }
+            });
+
+            // send message to update user score
+            bridge.send("userScoreTopic", input);
+            return new AsyncUserResponse(){
+                {
+                    this.setMessage("ACK");
+                }
+            };
+        } catch (Exception e) {
+            return new AsyncUserResponse(){
+                {
+                    this.setMessage("FAILED");
+                    this.setError(new ErrorResponse());
+                    this.getError().setErrorId(504);
+                    this.getError().setErrorMessage("failed to add score: " + e.getMessage());
                 }
             };
         }

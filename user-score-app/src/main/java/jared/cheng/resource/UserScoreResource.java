@@ -42,6 +42,16 @@ public class UserScoreResource {
             }, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping(path = "/async-add")
+    public ResponseEntity<AsyncUserResponse> addScore(@RequestBody AsyncUserRequest request) {
+        final AsyncUserResponse resp = svc.addScore(request);
+        if (null == resp.getError()) {
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @GetMapping("/owner")
     public String getOwner() {
