@@ -40,7 +40,7 @@
 
         <!-- dep versions -->
         <spring-cloud.version>2021.0.6</spring-cloud.version>
-        <junit-5.version>5.9.2</junit-5.version>
+        <junit-5.version>5.10.0</junit-5.version>
         <assertJ.version>3.24.2</assertJ.version>
     </properties>
 
